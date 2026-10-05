@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data: blob:; worker-src blob:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>문제은행 랜덤 시험지 — 엑셀로 뽑아 바로 인쇄</title>
+  <link rel="stylesheet" href="app.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="logo" aria-label="학교 로고 자리">로고</div><div><h1>문제은행 랜덤 시험지</h1><p>엑셀·CSV 문제은행으로 학생용 시험지와 교사용 정답지를 뽑아 인쇄합니다 · 내 파일은 이 컴퓨터를 벗어나지 않습니다</p></div><nav id="site-links" aria-label="프로그램 링크"></nav></header>
+<main>
+<nav class="tabs" role="tablist" aria-label="문제지 작업 단계"><button id="tab-0" role="tab" aria-controls="panel-0" aria-selected="true" tabindex="0">① 문제은행</button><button id="tab-1" role="tab" aria-controls="panel-1" aria-selected="false" tabindex="-1">② 출제 설정</button><button id="tab-2" role="tab" aria-controls="panel-2" aria-selected="false" tabindex="-1">③ 시험지 꾸미기</button><button id="tab-3" role="tab" aria-controls="panel-3" aria-selected="false" tabindex="-1">④ 미리보기·인쇄</button></nav>
+  <section class="panel" id="panel-0" role="tabpanel" aria-labelledby="tab-0">
+    <h2>1. 문제은행 열기</h2>
+    <p>엑셀·CSV를 올리거나, 시트의 셀을 복사해 붙여 넣으세요.</p>
+    <div class="downloads"><a href="templates/blank.xlsx" download>빈 양식 xlsx</a><a href="templates/example.xlsx" download>예시 60문항 xlsx</a><a href="templates/blank.csv" download>빈 양식 CSV</a><a href="templates/example.csv" download>예시 CSV</a></div>
+    <label for="file">문제은행 파일 (xlsx / UTF-8 CSV, 최대 5MB)</label><input id="file" type="file" accept=".xlsx,.csv">
+    <details><summary>셀 붙여넣기</summary><p>문항 시트의 열 이름부터 복사하세요. 시험정보도 위쪽에 키·값 두 열로 넣으면 머리글에 반영됩니다.</p><label for="paste">탭으로 구분한 셀</label><textarea id="paste" rows="6" placeholder="유형&#9;문제&#9;보기1&#9;보기2&#9;보기3&#9;보기4&#9;보기5&#9;정답"></textarea><button id="read-paste" type="button">붙여넣기 검사</button></details>
+    <button id="example" type="button" class="secondary">가상 예시로 시작</button>
+    <p class="muted">구글 시트: 파일 → 다운로드 → Microsoft Excel(.xlsx) 또는 CSV. 업로드한 내용은 새로고침하면 사라집니다.</p>
+    <div id="validation" role="status" aria-live="polite">파일을 열면 검사 결과가 여기에 나옵니다.</div>
+  </section>
+  <section class="panel" id="panel-1" role="tabpanel" aria-labelledby="tab-1" hidden><p class="bank-warning">먼저 문제은행을 올려 주세요.</p>
+    <h2>2. 출제 설정</h2>
+    <fieldset id="settings" disabled>
+      <label for="count">전체 문항 수</label><input id="count" type="number" min="1" max="5000" value="20">
+      <div class="form-grid"><div><label for="choice-count">선택형 개수</label><input id="choice-count" type="number" min="0" value="14"></div><div><label for="short-count">단답형 개수</label><input id="short-count" type="number" min="0" value="6"></div></div>
+      <p id="type-total" role="status"></p>
+      <label for="difficulty-mode">난이도 입력 방식</label><select id="difficulty-mode"><option value="count">개수</option><option value="percent">비율 (%)</option></select>
+      <div class="level-grid"><div><label for="level-0">상 <span class="level-unit">개</span></label><input id="level-0" type="number" min="0" value="4"></div><div><label for="level-1">중 <span class="level-unit">개</span></label><input id="level-1" type="number" min="0" value="10"></div><div><label for="level-2">하 <span class="level-unit">개</span></label><input id="level-2" type="number" min="0" value="6"></div></div><p id="difficulty-total" role="status"></p>
+      <p class="muted">유형별 개수를 먼저 지키고, 전체 난이도를 최대한 맞춥니다. 난이도 안에서 단원을 고르게 뽑습니다. 난이도가 비어 있으면 중으로 셉니다.</p>
+      <details><summary>고급 난이도 비율</summary><label for="ratio">상·중·하 가중치</label><input id="ratio" value="상2:중5:하3"><button id="apply-ratio" type="button" class="secondary">위 입력에 반영</button></details>
+      <label for="fit-pages">쪽 수 맞춤</label><select id="fit-pages"><option value="auto" selected>자동 (글자 크기 유지)</option><option value="1">1쪽 (필요하면 9.5pt로 줄임)</option><option value="2">2쪽 (필요하면 9.5pt로 줄임)</option><option value="3">3쪽 (필요하면 9.5pt로 줄임)</option><option value="4">4쪽 (필요하면 9.5pt로 줄임)</option></select>
+      <label class="check"><input id="balanced" type="checkbox">단원 균등</label><label class="check"><input id="mix" type="checkbox" checked>보기 섞기</label>
+      <label for="seed">섞기 시드</label><div class="seed-row"><input id="seed" value="exam-001" maxlength="80"><button id="new-seed" type="button" class="secondary">새 시드</button></div><p class="muted">같은 파일·설정·시드면 같은 문제지가 나옵니다.</p>
+      <button id="generate" type="button">문제지 만들기</button>
+    </fieldset>
+    <div id="selection-summary" role="status" aria-live="polite"></div>
+  </section>
+<section class="panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2" hidden><h2>3. 시험지 꾸미기</h2><p class="bank-warning">먼저 문제은행을 올려 주세요.</p><fieldset id="decoration-settings" disabled><label for="size">글자 크기</label><select id="size"><option value="small">작게 (9.5pt)</option><option value="normal" selected>보통 (11pt)</option><option value="large">크게 (13pt)</option></select>      <details id="header-settings" open><summary>머리글·바닥글 설정</summary>
+        <p class="muted">파일의 시험정보가 초기값입니다. 수정값은 이 브라우저에 기억합니다. 학생 이름·성적 등 개인정보를 안내문구에 입력하지 마세요.</p>
+        <div id="header-fields"></div>
+        <label for="exam-logo">시험지 로고 (PNG·JPG·SVG, 5MB 이하)</label><input id="exam-logo" type="file" accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml">
+        <div class="form-grid"><div><label for="logoPosition">시험지 로고 위치</label><select id="logoPosition" data-header="logoPosition"><option value="none">없음</option><option value="left">제목 왼쪽</option><option value="right">제목 오른쪽</option></select></div><div><label for="logoSize">시험지 로고 크기</label><select id="logoSize" data-header="logoSize"><option value="small">작게</option><option value="normal">보통</option></select></div></div>
+        <label for="identityPosition">학년·반·번호·이름 위치</label><select id="identityPosition" data-header="identityPosition"><option value="box">머리글 오른쪽 위 상자</option><option value="line">제목 아래 한 줄</option></select>
+        <label class="check"><input id="seedOn" data-header="seedOn" type="checkbox" checked>바닥글 시드 표시</label>
+        <label for="footerText">바닥글 왼쪽 문구 (입력하면 시드 대신 표시)</label><input id="footerText" data-header="footerText" maxlength="200">
+        <label class="check"><input id="pageOn" data-header="pageOn" type="checkbox" checked>쪽번호 n/m 표시</label><label for="pagePosition">쪽번호 위치</label><select id="pagePosition" data-header="pagePosition"><option value="right">오른쪽</option><option value="center">가운데</option></select>
+        <button id="reset-header" type="button" class="secondary">파일 값으로 초기화</button><p id="header-message" role="status" aria-live="polite"></p>
+      </details>
+</fieldset></section>
+<section id="panel-3" role="tabpanel" aria-labelledby="tab-3" class="preview-section" aria-label="인쇄 미리보기" hidden><p class="bank-warning">먼저 문제은행을 올려 주세요.</p><div id="generation" role="status" aria-live="polite"></div>
+  <div class="preview-toolbar"><h2>4. 미리보기 · 인쇄</h2><div><button id="show-student" type="button" class="secondary" aria-pressed="true">학생용 보기</button><button id="show-teacher" type="button" class="secondary" aria-pressed="false">교사용 보기</button><button id="print-student" type="button" disabled>학생용 인쇄</button><button id="print-teacher" type="button" disabled>교사용 정답지 인쇄</button></div></div>
+  <p class="muted">A4 세로 · 인쇄 배율 100% · 브라우저 머리글/바닥글 끄기. 인쇄 창에서 PDF로 저장할 수 있습니다.</p>
+  <div id="empty-preview">문제은행을 검사하고 문제지를 만들어 주세요.</div>
+  <div class="preview-scroll"><div id="student" class="print-region"></div><div id="teacher" class="print-region" hidden></div></div>
+</section>
+</main>
+<footer class="site-footer">문제은행만 있으면 누구나 랜덤 문제지 · 파일 저장이나 로그인이 필요 없습니다.</footer>
+</body>
+</html>

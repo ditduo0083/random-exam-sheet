@@ -1,0 +1,21 @@
+{
+  "name": "random-exam-sheet",
+  "version": "0.1.0",
+  "description": "문제은행만 있으면 누구나 랜덤 문제지. 엑셀·CSV 기반 브라우저 A4 시험지 생성기.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "templates": "node --import tsx scripts/templates.ts",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "check-vendor": "node scripts/check-vendor.mjs",
+    "release": "node scripts/release.mjs"
+  },
+  "dependencies": {
+    "xlsx": "0.18.5"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.1",
+    "tsx": "4.22.4"
+  }
+}
