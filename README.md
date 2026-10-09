@@ -41,7 +41,7 @@ npm run release
 ```
 `dist/index.html`은 `file://`로 동작합니다. `print-sheet.zip`에는 실행 파일과 빈 양식·예시·문서가 포함됩니다. 모노레포에서 `check-vendor`는 원본과 8개 파일의 SHA256을 비교합니다. 공개 저장소에서는 '건너뜀'을 출력하며 자체 시험은 계속 실행합니다.
 
-사이트 링크는 `site.config.json`의 두 값으로 정하며 `TODO-URL`이면 숨깁니다. 기본 로고는 회색 자리표시자입니다. 배포용 로고는 `npm run build -- --logo <이미지 경로>` 또는 `PRINT_SHEET_LOGO` 환경변수로 넣습니다. 배포의 `dist/assets/logo.*`에만 들어가며 소스에 복사하지 않습니다. `npm run release`는 기본값으로 다시 빌드하여 학교 로고를 zip에서 제외합니다.
+사이트 링크는 `site.config.json`의 세 값(`videoUrl`·`downloadUrl`·`repositoryUrl`)으로 정합니다. 선택 값 `videoUrl`은 ‘사용 영상 보기’를 맨 앞에 표시합니다. 값이 없거나 비어 있거나 `TODO-URL`이면 숨기며, `https://` 또는 `./`로 시작하는 주소만 표시합니다. 기본 로고는 회색 자리표시자입니다. 배포용 로고는 `npm run build -- --logo <이미지 경로>` 또는 `PRINT_SHEET_LOGO` 환경변수로 넣습니다. 배포의 `dist/assets/logo.*`에만 들어가며 소스에 복사하지 않습니다. `npm run release`는 기본값으로 다시 빌드하여 학교 로고를 zip에서 제외합니다.
 
 **로고는 코드 라이선스에 포함되지 않음 — 포크할 때 자기 학교 로고로 바꾸세요**.
 

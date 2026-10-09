@@ -3,6 +3,7 @@ import { paginatePrint, type PrintBlock } from './paginate-print';
 import { defaults, readOverrides, saveOverrides, type HeaderSettings } from './header-settings';
 import { selectWithDetails, quotas, type DisplayQuestion, type Settings } from './select';
 import config from '../site.config.json';
+import { siteLinks } from './site-links';
 import { exampleInfo, exampleRows } from './examples';
 declare const PARSER_WORKER: string;
 declare const LOGO_FILE: string;
@@ -17,8 +18,8 @@ let previewTimer:ReturnType<typeof setTimeout>;
 const e = (tag:string,text='',className='') => { const el = document.createElement(tag); el.textContent = text; el.className=className; return el; };
 const symbols = ['①','②','③','④','⑤'];
 if (LOGO_FILE) { const logo=e('img') as HTMLImageElement; logo.src=LOGO_FILE; logo.alt='학교 로고'; document.querySelector('.logo')!.replaceChildren(logo); }
-for (const [value,label] of [[config.downloadUrl,'프로그램 내려받기(zip)'],[config.repositoryUrl,'GitHub에서 보기·포크']]) {
-  if (value && value !== 'TODO-URL' && /^(https:\/\/|\.\/)/.test(value)) { const a=e('a',label) as HTMLAnchorElement; a.href=value; a.rel='noopener noreferrer'; $('site-links').append(a); }
+for (const [value,label] of siteLinks(config)) {
+  const a=e('a',label) as HTMLAnchorElement; a.href=value; a.rel='noopener noreferrer'; $('site-links').append(a);
 }
 function invalidate() {
   validPreview=false; current=[];
