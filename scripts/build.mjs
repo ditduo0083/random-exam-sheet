@@ -21,5 +21,5 @@ if(existsSync(resolve(root,'docs')))cpSync(resolve(root,'docs'),resolve(dist,'do
 import { createRequire } from 'node:module';
 const require=createRequire(import.meta.url);
 import { dirname } from 'node:path';
-writeFileSync(resolve(dist,'THIRD-PARTY-NOTICES.txt'),readFileSync(resolve(dirname(require.resolve('xlsx/package.json')),'LICENSE'),'utf8'));
+writeFileSync(resolve(dist,'THIRD-PARTY-NOTICES.txt'),readFileSync(resolve(dirname(require.resolve('xlsx')),'LICENSE'),'utf8'));
 console.log(`빌드 완료: dist/index.html (로고 ${logo?'포함':'자리표시자'})`);
